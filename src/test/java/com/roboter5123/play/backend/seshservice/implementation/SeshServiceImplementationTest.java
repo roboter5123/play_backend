@@ -9,6 +9,7 @@ import com.roboter5123.play.backend.seshservice.service.exception.NoSuchSeshExce
 import com.roboter5123.play.backend.seshservice.service.exception.TooManySeshsException;
 import com.roboter5123.play.backend.seshservice.sesh.api.Sesh;
 import com.roboter5123.play.backend.seshservice.sesh.model.AbstractSeshState;
+import com.roboter5123.play.backend.seshservice.sesh.model.LobbyState;
 import com.roboter5123.play.backend.seshservice.sesh.model.SeshType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-class SeshServiceImplTest {
+class SeshServiceImplementationTest {
 
 	@MockBean
 	MessageBroadcaster broadcaster;
@@ -39,10 +40,10 @@ class SeshServiceImplTest {
 	@BeforeEach
 	void setup() {
 
-		this.sessionCode = "abcd";
-		this.playerName = "roboter5123";
-		sesh = Mockito.mock(Sesh.class);
-	}
+        this.sessionCode = "abcd";
+        this.playerName = "roboter5123";
+        sesh = Mockito.mock(Sesh.class);
+    }
 
 	@Test
 	void create_session_should_return_game() throws TooManySeshsException {
@@ -81,7 +82,7 @@ class SeshServiceImplTest {
 	@Test
 	void joinSeshAsHost_should_return_state() {
 
-		AbstractSeshState expected = new AbstractSeshState();
+		AbstractSeshState expected = new LobbyState();
 
 		when(sessionManager.getSesh(sessionCode)).thenReturn(sesh);
 
@@ -102,7 +103,7 @@ class SeshServiceImplTest {
 	@Test
 	void joinSeshAsController_should_return_state() {
 
-		AbstractSeshState expected = new AbstractSeshState();
+		AbstractSeshState expected = new LobbyState();
 
 		when(sessionManager.getSesh(sessionCode)).thenReturn(sesh);
 
@@ -125,7 +126,7 @@ class SeshServiceImplTest {
 
 		when(sessionManager.getSesh(sessionCode)).thenReturn(sesh);
 
-		Command incomingCommand = new Command(playerName, new Action<>(playerName, "Chat message"));
+		Command incomingCommand = new Command(playerName, new Action<>("basic", "any"));
 		CommandStompMessage incomingMessage = new CommandStompMessage(incomingCommand);
 
 		seshService.sendCommandToSesh(incomingMessage, sessionCode);
@@ -139,7 +140,7 @@ class SeshServiceImplTest {
 		NoSuchSeshException exception = new NoSuchSeshException("Could not join session with code " + sessionCode + ".Session not found.");
 		when(sessionManager.getSesh(any())).thenThrow(exception);
 
-		Command incomingCommand = new Command(playerName, new Action<>(playerName, "Chat message"));
+		Command incomingCommand = new Command(playerName, new Action<>("basic", "any"));
 		CommandStompMessage incomingMessage = new CommandStompMessage(incomingCommand);
 		assertThrows(NoSuchSeshException.class, () -> seshService.sendCommandToSesh(incomingMessage, sessionCode));
 	}

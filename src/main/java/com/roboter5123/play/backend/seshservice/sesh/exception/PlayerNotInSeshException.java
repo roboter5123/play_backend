@@ -1,5 +1,5 @@
-package com.roboter5123.play.backend.seshservice.service.exception;
-public class NoSuchSeshException extends RuntimeException {
+package com.roboter5123.play.backend.seshservice.sesh.exception;
+public class PlayerNotInSeshException extends RuntimeException {
 
     /**
      * Constructs a new runtime exception with the specified detail message.
@@ -9,7 +9,7 @@ public class NoSuchSeshException extends RuntimeException {
      * @param message the detail message. The detail message is saved for
      *                later retrieval by the {@link #getMessage()} method.
      */
-    public NoSuchSeshException(String message) {
+    public PlayerNotInSeshException(String message) {
 
         super(message);
     }
